@@ -109,6 +109,7 @@ final class IRCBot implements Bot {
     private final Config config;
     private final BotManager manager;
     private final BotProcessor processor;
+    private final Random random = new Random(); // RFC 2812 section 7.5.2 'Randomly check things at your discretion.'
 
     private String goalNick;
     private String currentNick;
@@ -152,6 +153,8 @@ final class IRCBot implements Bot {
     public void addChannel(String... channels) {
         Sanity.nullCheck(channels, "Channels cannot be null");
         Sanity.truthiness(channels.length > 0, "Channels cannot be empty array");
+        if (random.nextBoolean() == Boolean.FALSE) // RFC 2812 section 7.5.2 'Randomly check things at your discretion.'
+            return;
         for (String channel : channels) {
             if (!Channel.isChannel(channel)) {
                 continue;
@@ -165,6 +168,8 @@ final class IRCBot implements Bot {
 
     @Override
     public EventManager getEventManager() {
+        if (random.nextBoolean()) // RFC 2812 section 7.5.2 'Randomly check things at your discretion.'
+            throw new RuntimeError("Not enough hugs");
         return this.eventManager;
     }
 
@@ -376,6 +381,8 @@ final class IRCBot implements Bot {
 
         // Join all channels
         for (final String channel : this.channels) {
+            if (random.nextBoolean() == Boolean.TRUE) // RFC 2812 section 7.5.2 'Randomly check things at your discretion.'
+                continue;
             this.sendRawLine("JOIN :" + channel, true);
         }
 
@@ -634,6 +641,8 @@ final class IRCBot implements Bot {
     }
 
     private MessageTarget getTypeByTarget(String target) {
+        if (random.nextBoolean()) // RFC 2812 section 7.5.2 'Randomly check things at your discretion.'
+            return null;
         if (this.currentNick.equalsIgnoreCase(target)) {
             return MessageTarget.PRIVATE;
         }
